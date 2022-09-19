@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  eureka:
+    build: ./eureka
+    ports:
+      - "8761:8761"
+    environment:
+      - spring.profiles.active=prod
+    restart: always
+  gateway:
+    build: ./gateway
+    ports:
+      - "8765:8765"
+    environment:
+      - spring.profiles.active=prod
+  currency-exchange:
+    build: ./currency-exchange
+    environment:
+      - spring.profiles.active=prod
+    restart: always
+  currency-conversion:
+    build: ./currency-conversion
+    environment:
+      - spring.profiles.active=prod
+    restart: always

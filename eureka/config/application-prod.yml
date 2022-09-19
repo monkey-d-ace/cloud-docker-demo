@@ -1,0 +1,18 @@
+server:
+  port: 8761
+spring:
+  application:
+    name: eureka
+eureka:
+  instance:
+    eureka
+  client:
+    service-url:
+      defaultZone: http://nacos:8762/eureka,http://consul:8763/eureka
+  server:
+    waitTimeInMsWhenSyncEmpty: 0
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"    
