@@ -1,25 +1,48 @@
 version: "3.7"
 services:
-  eureka:
-    build: ./eureka
+  eureka1:
+    image: cloud-docker-demo_eureka
     ports:
       - "8761:8761"
     environment:
-      - spring.profiles.active=prod
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER.PORT=8761
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka2:8762/eureka,http://eureka3:8763/eureka
+    restart: always
+  eureka2:
+    image: cloud-docker-demo_eureka
+    ports:
+      - "8762:8762"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod1
+      - SERVER.PORT=8762
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka3:8763/eureka,http://eureka1:8761/eureka
+    restart: always
+  eureka3:
+    image: cloud-docker-demo_eureka
+    ports:
+      - "8763:8763"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod2
+      - SERVER.PORT=8763
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka2:8762/eureka,http://eureka1:8761/eureka
     restart: always
   gateway:
-    build: ./gateway
+    image: cloud-docker-demo_gateway
     ports:
       - "8765:8765"
     environment:
-      - spring.profiles.active=prod
+      - SPRING_PROFILES_ACTIVE=prod
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka2:8762/eureka,http://eureka1:8761/eureka,http://eureka3:8763/eureka
   currency-exchange:
-    build: ./currency-exchange
+    image: cloud-docker-demo_currency-exchange
     environment:
-      - spring.profiles.active=prod
+      - SPRING_PROFILES_ACTIVE=prod
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka2:8762/eureka,http://eureka1:8761/eureka,http://eureka3:8763/eureka
     restart: always
   currency-conversion:
-    build: ./currency-conversion
+    image: cloud-docker-demo_currency-conversion
     environment:
-      - spring.profiles.active=prod
+      - SPRING_PROFILES_ACTIVE=prod
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka2:8762/eureka,http://eureka1:8761/eureka,http://eureka3:8763/eureka
     restart: always
